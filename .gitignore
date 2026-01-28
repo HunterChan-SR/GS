@@ -1,0 +1,42 @@
+# Bazel build output
+bazel-bin/
+bazel-out/
+bazel-testlogs/
+bazel-GS
+bazel-*
+
+# Build artifacts
+*.o
+*.a
+*.so
+*.dylib
+*.exe
+*.out
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+data_generator.log
+
+# Cache
+.cache/
+
+# Temporary files
+*.tmp
+*.bak
+
+# data
+data/
+
+# vscode
+.vscode/

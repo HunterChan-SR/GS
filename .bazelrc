@@ -1,0 +1,2 @@
+# C++ language version
+build --cxxopt=-std=c++20
