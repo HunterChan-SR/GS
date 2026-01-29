@@ -6,7 +6,7 @@ cc_binary(
     copts = ["-std=c++20"],
     deps = [
         "//data_tools/data_generater:data_generater",
-        "//data_tools/data_strtct:data_struct",
+        "//data_tools/data_struct:data_struct",
         "//data_tools/db/rocksdb:rocksdb_kv",
         "//logger:logger",
     ],

@@ -8,7 +8,7 @@ cc_library(
     copts = ["-std=c++20"],
     visibility = ["//visibility:public"],
     deps = [
-        "//data_tools/data_strtct:data_struct",
+        "//data_tools/data_struct:data_struct",
         "//logger",
         "//data_tools/db/rocksdb:rocksdb_kv",
     ],
@@ -23,7 +23,7 @@ cc_binary(
     deps = [
         ":bst",
         "//data_tools/data_generater",
-        "//data_tools/data_strtct:data_struct",
+        "//data_tools/data_struct:data_struct",
         "//logger",
         "//data_tools/db/rocksdb:rocksdb_kv",
     ],

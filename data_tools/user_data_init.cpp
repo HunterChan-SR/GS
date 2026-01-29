@@ -4,7 +4,7 @@
 
 #include "logger/logger.h"
 #include "data_tools/data_generater/data_generater.h"
-#include "data_tools/data_strtct/data_struct.h"
+#include "data_tools/data_struct/data_struct.h"
 #include "data_tools/db/rocksdb/rocksdb_kv.h"
 
 static constexpr uint64 DEFAULT_USER_COUNT = (1ull << 30);
@@ -56,13 +56,13 @@ int main(int argc, char** argv)
     Logger::Info("db_path    = " + db_path);
 
     // 1. 生成数据
-    std::vector<UserData> users;
+    std::vector<UserData<uint64,uint64>> users;
     Logger::Info("Generating user data...");
     generate_users_data(users, user_count, /*seed=*/0);
 
     // 2. 分桶
     Logger::Info("Bucketizing data...");
-    std::vector<std::vector<UserData>> buckets;
+    std::vector<std::vector<UserData<uint64,uint64>>> buckets;
     bucketize_users_data(users, buckets, bucket_cnt);
 
     // 3. 打开 RocksDB

@@ -13,7 +13,7 @@ cc_library(
         "-lrocksdb",
     ],
     deps = [
-        "//data_tools/data_strtct:data_struct",
+        "//data_tools/data_struct:data_struct",
     ],
     visibility = ["//visibility:public"],
 )

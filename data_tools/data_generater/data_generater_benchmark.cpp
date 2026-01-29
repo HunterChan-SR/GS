@@ -8,7 +8,7 @@
 
 
 TEST_F(PerformanceBenchmark, Generate1Million) {
-    std::vector<UserData> users;
+    std::vector<UserData<uint64,uint64>> users;
     auto start = std::chrono::high_resolution_clock::now();
     generate_users_data(users, 1000000);
     auto end = std::chrono::high_resolution_clock::now();
@@ -19,7 +19,7 @@ TEST_F(PerformanceBenchmark, Generate1Million) {
 }
 
 TEST_F(PerformanceBenchmark, Generate10Million) {
-    std::vector<UserData> users;
+    std::vector<UserData<uint64,uint64>> users;
     auto start = std::chrono::high_resolution_clock::now();
     generate_users_data(users, 10000000);
     auto end = std::chrono::high_resolution_clock::now();
@@ -30,7 +30,7 @@ TEST_F(PerformanceBenchmark, Generate10Million) {
 }
 
 TEST_F(PerformanceBenchmark, Generate100Million) {
-    std::vector<UserData> users;
+    std::vector<UserData<uint64,uint64>> users;
     auto start = std::chrono::high_resolution_clock::now();
     generate_users_data(users, 100000000);
     auto end = std::chrono::high_resolution_clock::now();
@@ -41,7 +41,7 @@ TEST_F(PerformanceBenchmark, Generate100Million) {
 }
 
 TEST_F(PerformanceBenchmark, Generate1Billion) {
-    std::vector<UserData> users;
+    std::vector<UserData<uint64,uint64>> users;
     auto start = std::chrono::high_resolution_clock::now();
     generate_users_data(users, 1000000000);
     auto end = std::chrono::high_resolution_clock::now();
@@ -52,7 +52,7 @@ TEST_F(PerformanceBenchmark, Generate1Billion) {
 }
 
 TEST_F(PerformanceBenchmark, GenerateWithRange) {
-    std::vector<UserData> users;
+    std::vector<UserData<uint64,uint64>> users;
     auto start = std::chrono::high_resolution_clock::now();
     generate_users_data_range(users, 1000000, 1000, 100000);
     auto end = std::chrono::high_resolution_clock::now();
@@ -67,10 +67,10 @@ TEST_F(PerformanceBenchmark, GenerateWithRange) {
 }
 
 TEST_F(PerformanceBenchmark, Bucketize1Million) {
-    std::vector<UserData> users;
+    std::vector<UserData<uint64,uint64>> users;
     generate_users_data(users, 1000000);
     
-    std::vector<std::vector<UserData>> buckets;
+    std::vector<std::vector<UserData<uint64,uint64>>> buckets;
     auto start = std::chrono::high_resolution_clock::now();
     bucketize_users_data(users, buckets, 128);
     auto end = std::chrono::high_resolution_clock::now();
@@ -87,10 +87,10 @@ TEST_F(PerformanceBenchmark, Bucketize1Million) {
 }
 
 TEST_F(PerformanceBenchmark, Bucketize10Million) {
-    std::vector<UserData> users;
+    std::vector<UserData<uint64,uint64>> users;
     generate_users_data(users, 10000000);
     
-    std::vector<std::vector<UserData>> buckets;
+    std::vector<std::vector<UserData<uint64,uint64>>> buckets;
     auto start = std::chrono::high_resolution_clock::now();
     bucketize_users_data(users, buckets, 256);
     auto end = std::chrono::high_resolution_clock::now();
@@ -107,10 +107,10 @@ TEST_F(PerformanceBenchmark, Bucketize10Million) {
 }
 
 TEST_F(PerformanceBenchmark, Bucketize100Million) {
-    std::vector<UserData> users;
+    std::vector<UserData<uint64,uint64>> users;
     generate_users_data(users, 100000000);
     
-    std::vector<std::vector<UserData>> buckets;
+    std::vector<std::vector<UserData<uint64,uint64>>> buckets;
     auto start = std::chrono::high_resolution_clock::now();
     bucketize_users_data(users, buckets, 512);
     auto end = std::chrono::high_resolution_clock::now();
@@ -127,10 +127,10 @@ TEST_F(PerformanceBenchmark, Bucketize100Million) {
 }
 
 TEST_F(PerformanceBenchmark, Bucketize1Billion) {
-    std::vector<UserData> users;
+    std::vector<UserData<uint64,uint64>> users;
     generate_users_data(users, 1000000000);
     
-    std::vector<std::vector<UserData>> buckets;
+    std::vector<std::vector<UserData<uint64,uint64>>> buckets;
     auto start = std::chrono::high_resolution_clock::now();
     bucketize_users_data(users, buckets, 1024);
     auto end = std::chrono::high_resolution_clock::now();
@@ -157,7 +157,7 @@ protected:
 
 TEST_F(CorrectnessTest, GenerateDataIDSequence) {
     // 验证ID是否连续递增
-    std::vector<UserData> users;
+    std::vector<UserData<uint64,uint64>> users;
     size_t test_size = 10000;
     generate_users_data(users, test_size);
     
@@ -175,7 +175,7 @@ TEST_F(CorrectnessTest, GenerateDataIDSequence) {
 
 TEST_F(CorrectnessTest, GenerateDataNonZero) {
     // 验证生成的数据都非零
-    std::vector<UserData> users;
+    std::vector<UserData<uint64,uint64>> users;
     size_t test_size = 100000;
     generate_users_data(users, test_size, 12345);  // 使用固定种子保证可重复
     
@@ -193,7 +193,7 @@ TEST_F(CorrectnessTest, GenerateDataNonZero) {
 
 TEST_F(CorrectnessTest, GenerateRangeDataBounds) {
     // 验证范围生成的数据是否都在指定范围内
-    std::vector<UserData> users;
+    std::vector<UserData<uint64,uint64>> users;
     size_t test_size = 100000;
     uint64 data_min = 5000;
     uint64 data_max = 50000;
@@ -214,12 +214,12 @@ TEST_F(CorrectnessTest, GenerateRangeDataBounds) {
 
 TEST_F(CorrectnessTest, BucketizeAllRecordsIncluded) {
     // 验证分桶后所有记录都被包含
-    std::vector<UserData> users;
+    std::vector<UserData<uint64,uint64>> users;
     size_t test_size = 100000;
     size_t bucket_count = 64;
     
     generate_users_data(users, test_size);
-    std::vector<std::vector<UserData>> buckets;
+    std::vector<std::vector<UserData<uint64,uint64>>> buckets;
     bucketize_users_data(users, buckets, bucket_count);
     
     size_t total = 0;
@@ -233,12 +233,12 @@ TEST_F(CorrectnessTest, BucketizeAllRecordsIncluded) {
 
 TEST_F(CorrectnessTest, BucketizeCorrectDistribution) {
     // 验证分桶逻辑是否正确（ID % bucket_count == bucket_index）
-    std::vector<UserData> users;
+    std::vector<UserData<uint64,uint64>> users;
     size_t test_size = 10000;
     size_t bucket_count = 128;
     
     generate_users_data(users, test_size);
-    std::vector<std::vector<UserData>> buckets;
+    std::vector<std::vector<UserData<uint64,uint64>>> buckets;
     bucketize_users_data(users, buckets, bucket_count);
     
     bool correct = true;
@@ -258,12 +258,12 @@ TEST_F(CorrectnessTest, BucketizeCorrectDistribution) {
 
 TEST_F(CorrectnessTest, BucketizeNoBucketEmpty) {
     // 验证分桶后是否有空桶（对于足够大的数据集）
-    std::vector<UserData> users;
+    std::vector<UserData<uint64,uint64>> users;
     size_t test_size = 100000;
     size_t bucket_count = 64;
     
     generate_users_data(users, test_size);
-    std::vector<std::vector<UserData>> buckets;
+    std::vector<std::vector<UserData<uint64,uint64>>> buckets;
     bucketize_users_data(users, buckets, bucket_count);
     
     int empty_count = 0;
@@ -283,7 +283,7 @@ TEST_F(CorrectnessTest, BucketizeNoBucketEmpty) {
 
 TEST_F(CorrectnessTest, SeedReproducibility) {
     // 验证相同种子生成相同数据
-    std::vector<UserData> users1, users2;
+    std::vector<UserData<uint64,uint64>> users1, users2;
     uint64 seed = 99999;
     size_t test_size = 10000;
     

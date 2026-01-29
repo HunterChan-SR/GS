@@ -6,7 +6,7 @@
 #include <vector>
 #include <rocksdb/db.h>
 
-#include "data_tools/data_strtct/data_struct.h"
+#include "data_tools/data_struct/data_struct.h"
 
 /**
  * RocksDB 键值存储封装类
@@ -27,14 +27,14 @@ public:
      * @param users 该 bucket 内的用户数据列表
      */
     void put_bucket(uint64 bucket_id,
-                    const std::vector<UserData> &users);
+                    const std::vector<UserData<uint64,uint64>> &users);
 
     /**
      * 扫描并返回指定 bucket 内的所有用户数据
      * @param bucket_id bucket ID
      * @return 该 bucket 内的用户数据列表
      */
-    std::vector<UserData> scan_bucket(uint64 bucket_id);
+    std::vector<UserData<uint64,uint64>> scan_bucket(uint64 bucket_id);
 
 private:
     // RocksDB 数据库实例

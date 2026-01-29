@@ -14,23 +14,34 @@ using int64 = int64_t;
 /**
  * 用户数据结构体
  */
+template <typename T1, typename T2>
 struct UserData
 {
-    uint64 id;
-    uint64 data;
+    T1 id;
+    T2 data;
 
     /**
      * 比较运算符（按 id 比较）
      */
-    bool operator<(const UserData &other) const;
+    bool operator<(const UserData &other) const
+    {
+        return this->id < other.id;
+    }
     /**
      * 日志打印用户信息
      */
-    void log_info() const;
+    void log_info() const
+    {
+        Logger::Info("UserData { id: " + std::to_string(id) + ", data: " + std::to_string(data) + " }");
+    }
     /**
      * 重载输出流运算符
      */
-    friend std::ostream &operator<<(std::ostream &os, const UserData &u);
+    friend std::ostream &operator<<(std::ostream &os, const UserData &u)
+    {
+        os << "UserData { id: " << u.id << ", data: " << u.data << " }";
+        return os;
+    }
 };
 
 /**

@@ -4,7 +4,7 @@
 #include <cstddef>
 #include <vector>
 #include "logger/logger.h"
-#include "data_tools/data_strtct/data_struct.h"
+#include "data_tools/data_struct/data_struct.h"
 #include <memory>
 #include <queue>
 
@@ -55,6 +55,33 @@ private:
         return node;
     }
 
+    /**
+     * 从有序数组递归构建平衡 BST 节点，作为叶子节点
+     * @param items 有序数组
+     * @param start 起始索引
+     * @param end 结束索引
+     * @return 构建好的 BST 节点
+     */
+    static std::unique_ptr<BSTNode<T>> build_node_as_leaves_from_sorted(
+        const std::vector<T> &items, int64 start, int64 end)
+    {
+        if (start > end)
+            return nullptr;
+        if (start == end)
+        {
+            auto node = std::make_unique<BSTNode<T>>();
+            node->data = items[start];
+            return node;
+        }
+        int64 mid = (start + end) / 2;
+
+        auto node = std::make_unique<BSTNode<T>>();
+        node->data = (items[mid] + items[mid + 1]) / 2;
+        node->left = build_node_as_leaves_from_sorted(items, start, mid);
+        node->right = build_node_as_leaves_from_sorted(items, mid + 1, end);
+        return node;
+    }
+
 public:
     /**
      * 默认构造函数
@@ -81,14 +108,57 @@ public:
      * @param items 无序数组
      * @return 构建好的 BST
      */
-    static BST<T> build_tree(std::vector<T> &items)
+    static BST<T> build_tree(std::vector<T> items)
     {
         std::sort(items.begin(), items.end());
         return build_tree_from_sorted(items, 0, items.size() - 1);
     }
 
     /**
-     * 打印 BST 结构（按层次遍历 BFS） 
+     * 从有序数组当作叶子节点，构建 BST
+     * @param items 有序数组
+     * @param start 起始索引
+     * @param end 结束索引
+     * @return 构建好的 BST
+     */
+    static BST<T> build_tree_as_leaves_from_sorted(const std::vector<T> &items, int64 start, int64 end)
+    {
+        BST<T> tree;
+        tree.root = build_node_as_leaves_from_sorted(items, start, end);
+        return tree;
+    }
+
+    /**
+     * 把无须数组当作叶子节点，构建 BST
+     * @param items 无序数组
+     * @return 构建好的 BST
+     */
+    static BST<T> build_tree_as_leaves(std::vector<T> items)
+    {
+        std::sort(items.begin(), items.end());
+        return build_tree_as_leaves_from_sorted(items, 0, items.size() - 1);
+    }
+
+    /**
+     * 把无序数组当成叶子节点，不足2^k的进行填充，构建满二叉树 BST
+     * @param items 无序数组
+     * @param pad_value 填充值
+     * @return 构建好的满二叉树 BST
+     */
+    static BST<T> build_full_tree_as_leaves(std::vector<T> items, const T &pad_value)
+    {
+        std::sort(items.begin(), items.end());
+        size_t n = items.size();
+        size_t full_size = 1;
+        while (full_size < n)
+            full_size = full_size * 2;
+        while (items.size() < full_size)
+            items.push_back(pad_value);
+        return build_tree_as_leaves_from_sorted(items, 0, items.size() - 1);
+    }
+
+    /**
+     * 打印 BST 结构（按层次遍历 BFS）
      */
     void log_tree_bfs() const
     {
@@ -166,7 +236,6 @@ private:
  * @param bucket_id 桶 ID
  * @return 构建好的 BST
  */
-BST<UserData> build_bst_from_users_db(const std::string db_path, uint64 bucket_id);
-
+BST<UserData<uint64,uint64>> build_bst_from_users_db(const std::string db_path, uint64 bucket_id);
 
 #endif // BST_H

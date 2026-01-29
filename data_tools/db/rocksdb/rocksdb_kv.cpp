@@ -47,7 +47,7 @@ std::string RocksDBKV::encode_key(uint64 bucket_id, uint64 user_id)
 }
 
 void RocksDBKV::put_bucket(uint64 bucket_id,
-                           const std::vector<UserData> &users)
+                           const std::vector<UserData<uint64,uint64>> &users)
 {
     rocksdb::WriteBatch batch;
 
@@ -64,9 +64,9 @@ void RocksDBKV::put_bucket(uint64 bucket_id,
     assert(s.ok());
 }
 
-std::vector<UserData> RocksDBKV::scan_bucket(uint64 bucket_id)
+std::vector<UserData<uint64,uint64>> RocksDBKV::scan_bucket(uint64 bucket_id)
 {
-    std::vector<UserData> result;
+    std::vector<UserData<uint64,uint64>> result;
 
     std::string start = encode_key(bucket_id, 0);
     std::string end = encode_key(bucket_id + 1, 0);

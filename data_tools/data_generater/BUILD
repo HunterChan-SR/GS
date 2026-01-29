@@ -8,7 +8,7 @@ cc_library(
     visibility = ["//visibility:public"],
     copts = ["-std=c++20"],
     deps = [
-        "//data_tools/data_strtct:data_struct",
+        "//data_tools/data_struct:data_struct",
     ],
 )
 

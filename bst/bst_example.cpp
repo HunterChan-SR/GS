@@ -1,5 +1,5 @@
 #include <vector>
-#include "data_tools/data_strtct/data_struct.h"
+#include "data_tools/data_struct/data_struct.h"
 #include "data_tools/data_generater/data_generater.h"
 #include "bst.h"
 #include "data_tools/db/rocksdb/rocksdb_kv.h"
@@ -9,7 +9,7 @@
  */
 void t_generate_and_build_bst()
 {
-    std::vector<UserData> users;
+    std::vector<UserData<uint64,uint64>> users;
     generate_users_data(users, 32, 0);
 
     Logger::Info("Generated Users:");
@@ -19,7 +19,7 @@ void t_generate_and_build_bst()
     }
 
     Logger::Info("Building BST...");
-    BST<UserData> tree = BST<UserData>::build_tree(users);
+    BST<UserData<uint64,uint64>> tree = BST<UserData<uint64,uint64>>::build_tree(users);
 
     tree.log_tree_dfs();
     tree.log_tree_bfs();
@@ -30,12 +30,12 @@ void t_generate_and_build_bst()
  */
 void t_build_bst_from_db()
 {
-    std::vector<UserData> users;
+    std::vector<UserData<uint64,uint64>> users;
     generate_users_data(users, 32, 0);
     const std::string db_path = "./data";
 
     RocksDBKV kv(db_path);
-    std::vector<std::vector<UserData>> buckets;
+    std::vector<std::vector<UserData<uint64,uint64>>> buckets;
     bucketize_users_data(users, buckets, 4);
     for (size_t i = 0; i < buckets.size(); ++i)
     {
@@ -47,10 +47,21 @@ void t_build_bst_from_db()
         }
     }
     kv.~RocksDBKV(); // 关闭数据库
-    
+
     const uint64 bucket_id = 0;
     Logger::Info("Building BST from RocksDB bucket " + std::to_string(bucket_id) + "...");
-    BST<UserData> tree = build_bst_from_users_db(db_path, bucket_id);
+    BST<UserData<uint64,uint64>> tree = build_bst_from_users_db(db_path, bucket_id);
+
+    tree.log_tree_dfs();
+    tree.log_tree_bfs();
+}
+
+void t_build_bst_form_leaves()
+{
+    std::vector<int> items = {10, 20, 30, 40, 50, 60, 70, 80, 90};
+
+    Logger::Info("Building BST as leaves...");
+    BST<int> tree = BST<int>::build_full_tree_as_leaves(items, 100);
 
     tree.log_tree_dfs();
     tree.log_tree_bfs();
@@ -58,7 +69,8 @@ void t_build_bst_from_db()
 
 int main()
 {
-    t_generate_and_build_bst();
-    t_build_bst_from_db();
+    // t_generate_and_build_bst();
+    // t_build_bst_from_db();
+    t_build_bst_form_leaves();
     return 0;
 }
