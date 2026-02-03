@@ -32,10 +32,9 @@ public:
      * 构造函数 随机产生value
      * @param mod
      */
-    PrimeFieldNumber(T mod)
+    static PrimeFieldNumber<T> random(T mod)
     {
-        modulus = mod;
-        value = static_cast<T>(random_uint64() % modulus);
+        return PrimeFieldNumber<T>(random_uint64() % mod, mod);
     }
 
     /**
@@ -99,6 +98,16 @@ public:
     }
 
     /**
+     * 指数运算
+     */
+    PrimeFieldNumber pow(const PrimeFieldNumber &exp) const
+    {
+        if (!check_modulus(exp))
+            throw std::invalid_argument("Modulus mismatch");
+        return pow(exp.value);
+    }
+
+    /**
      * 求逆元
      */
     PrimeFieldNumber mod_inverse() const
@@ -108,11 +117,47 @@ public:
     }
 
     /**
+     * <
+     */
+    bool operator<(const PrimeFieldNumber &o) const
+    {
+        if (!check_modulus(o))
+            throw std::invalid_argument("Modulus mismatch");
+        return value < o.value;
+    }
+
+    /**
+     * ==
+     */
+    bool operator==(const PrimeFieldNumber &o) const
+    {
+        if (!check_modulus(o))
+            throw std::invalid_argument("Modulus mismatch");
+        return value == o.value;
+    }
+
+    /**
+     * 首位符号位 msb
+     */
+    PrimeFieldNumber msb(){
+        
+    }
+
+
+    /**
      * get value
      */
     T get_value() const
     {
         return value;
+    }
+
+    /**
+     * get modulus
+     */
+    T get_modulus() const
+    {
+        return modulus;
     }
 };
 

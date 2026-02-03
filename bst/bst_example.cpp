@@ -9,7 +9,7 @@
  */
 void t_generate_and_build_bst()
 {
-    std::vector<UserData<uint64,uint64>> users;
+    std::vector<UserData<uint64, uint64>> users;
     generate_users_data(users, 32, 0);
 
     Logger::Info("Generated Users:");
@@ -19,7 +19,7 @@ void t_generate_and_build_bst()
     }
 
     Logger::Info("Building BST...");
-    BST<UserData<uint64,uint64>> tree = BST<UserData<uint64,uint64>>::build_tree(users);
+    BST<UserData<uint64, uint64>> tree = BST<UserData<uint64, uint64>>::build_tree(users);
 
     tree.log_tree_dfs();
     tree.log_tree_bfs();
@@ -30,12 +30,12 @@ void t_generate_and_build_bst()
  */
 void t_build_bst_from_db()
 {
-    std::vector<UserData<uint64,uint64>> users;
+    std::vector<UserData<uint64, uint64>> users;
     generate_users_data(users, 32, 0);
     const std::string db_path = "./data";
 
     RocksDBKV kv(db_path);
-    std::vector<std::vector<UserData<uint64,uint64>>> buckets;
+    std::vector<std::vector<UserData<uint64, uint64>>> buckets;
     bucketize_users_data(users, buckets, 4);
     for (size_t i = 0; i < buckets.size(); ++i)
     {
@@ -50,7 +50,7 @@ void t_build_bst_from_db()
 
     const uint64 bucket_id = 0;
     Logger::Info("Building BST from RocksDB bucket " + std::to_string(bucket_id) + "...");
-    BST<UserData<uint64,uint64>> tree = build_bst_from_users_db(db_path, bucket_id);
+    BST<UserData<uint64, uint64>> tree = build_bst_from_users_db(db_path, bucket_id);
 
     tree.log_tree_dfs();
     tree.log_tree_bfs();
@@ -62,6 +62,13 @@ void t_build_bst_form_leaves()
 
     Logger::Info("Building BST as leaves...");
     BST<int> tree = BST<int>::build_full_tree_as_leaves(items, 100);
+
+    std::vector<int> level_nodes = tree.get_level_order_nodes();
+    Logger::Info("Level order nodes:");
+    for (const auto &node : level_nodes)
+    {
+        Logger::Info(std::to_string(node));
+    }
 
     tree.log_tree_dfs();
     tree.log_tree_bfs();

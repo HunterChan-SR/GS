@@ -158,6 +158,29 @@ public:
     }
 
     /**
+     * 按层序遍历转化为vector
+     */
+    std::vector<T> get_level_order_nodes() const
+    {
+        std::vector<T> nodes;
+        if (!root)
+            return nodes;
+        std::queue<BSTNode<T> *> que;
+        que.push(root.get());
+        while (!que.empty())
+        {
+            BSTNode<T> *node = que.front();
+            que.pop();
+            nodes.push_back(node->data);
+            if (node->left)
+                que.push(node->left.get());
+            if (node->right)
+                que.push(node->right.get());
+        }
+        return nodes;
+    }
+
+    /**
      * 打印 BST 结构（按层次遍历 BFS）
      */
     void log_tree_bfs() const
@@ -236,6 +259,6 @@ private:
  * @param bucket_id 桶 ID
  * @return 构建好的 BST
  */
-BST<UserData<uint64,uint64>> build_bst_from_users_db(const std::string db_path, uint64 bucket_id);
+BST<UserData<uint64, uint64>> build_bst_from_users_db(const std::string db_path, uint64 bucket_id);
 
 #endif // BST_H
